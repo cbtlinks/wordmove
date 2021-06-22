@@ -79,6 +79,8 @@ module Wordmove
         secrets << options.dig(env, :ftp, :password)
         secrets << options.dig(env, :ftp, :host)
         secrets << options.dig(env, :wordpress_path)
+        secrets << options.dig(env, :basic_auth, :user)
+        secrets << options.dig(env, :basic_auth, :password)
       end
 
       secrets.compact.delete_if(&:empty?)

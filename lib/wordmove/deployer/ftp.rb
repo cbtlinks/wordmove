@@ -118,7 +118,7 @@ module Wordmove
         remote_put(dump_script, remote_dump_script)
         # download the resulting dump (using the password)
         dump_url = "#{remote_wp_content_dir.url('dump.php')}?shared_key=#{one_time_password}"
-        download(dump_url, local_dump_path)
+        download(dump_url, local_dump_path, remote_options[:basic_auth])
         # cleanup remotely
         remote_delete(remote_dump_script)
         remote_delete(remote_wp_content_dir.path("dump.mysql"))
@@ -139,7 +139,7 @@ module Wordmove
           "?shared_key=#{one_time_password}",
           "&start=1&foffset=0&totalqueries=0&fn=dump.sql"
         ].join
-        download(import_url, temp_path)
+        download(import_url, temp_path, remote_options[:basic_auth])
         if options[:debug]
           logger.debug "Operation log located at: #{temp_path}"
         else

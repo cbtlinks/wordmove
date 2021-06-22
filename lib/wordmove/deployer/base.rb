@@ -95,13 +95,20 @@ module Wordmove
         raise ShellCommandError, "Return code reports an error" unless $CHILD_STATUS.success?
       end
 
-      def download(url, local_path)
+      def download(url, local_path, basic_auth = nil)
         logger.task_step true, "download #{url} > #{local_path}"
 
         return true if simulate?
 
+        open_options = {}
+        if basic_auth
+          open_options = {
+            http_basic_authentication: [basic_auth[:user], basic_auth[:password]]
+          }
+        end
+
         File.open(local_path, 'w') do |file|
-          file << URI.open(url).read
+          file << URI.open(url, open_options).read
         end
       end
 

@@ -159,6 +159,8 @@ describe Wordmove::Movefile do
           ftp_password
           ftp_host
           /var/www/your_site
+          basicuser
+          basicpassword
           https://foo.bar
         ]
       )
