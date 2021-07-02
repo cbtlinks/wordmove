@@ -101,6 +101,13 @@ module Wordmove
     end
     def push
       ensure_wordpress_options_presence!(options)
+
+      conf_message = "#{options.keys.join(', ')} をアップロードしようとしています。本当によろしいですか？"
+      if options.keys.include?("all") then
+        conf_message = "この操作によってリモートとローカルのディレクトリは完全に同期されます。\nアップロード先のディレクトリにファイルが存在する場合は必ずバックアップしてください。\n" + conf_message
+      end
+      exit 1 if !yes?(conf_message)
+
       begin
         deployer = Wordmove::Deployer::Base.deployer_for(options.deep_symbolize_keys)
       rescue MovefileNotFound => e
