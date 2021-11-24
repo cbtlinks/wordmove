@@ -227,4 +227,10 @@ $connection = new mysqli($db_host, $db_user, $db_password, $db_name, $db_port);
 $dump = new MySQLDump($connection);
 $db_file = 'dump.mysql';
 $dump->save($db_file);
+
+// バッファ無効化
+while (ob_get_level()) {
+  ob_end_clean();
+}
+
 readfile($db_file);
