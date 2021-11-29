@@ -145,7 +145,6 @@ module Wordmove
           command << Shellwords.split(options[:mysqldump_options])
         end
         command << Shellwords.escape(options[:name])
-        command << "--no-tablespaces"
         command.join(" ")
       end
 
