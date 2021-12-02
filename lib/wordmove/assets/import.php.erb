@@ -520,50 +520,6 @@ if (!$error && !isset($_REQUEST["fn"]) && $filename=="")
   }
 }
 
-/// SQLモードの設定変更 ///
-$incompatible_modes = array(
-  'NO_ZERO_DATE',
-  'ONLY_FULL_GROUP_BY',
-  'STRICT_TRANS_TABLES',
-  'STRICT_ALL_TABLES',
-  'TRADITIONAL',
-  'ANSI',
-);
-
-if ( empty( $modes ) ) {
-    $res = $mysqli->query("SELECT @@SESSION.sql_mode");
-
-  if ( empty( $res ) ) {
-    return;
-  }
-
-  $modes_array = mysqli_fetch_array( $res );
-  if ( empty( $modes_array[0] ) ) {
-    return;
-  }
-  $modes_str = $modes_array[0];
-
-  if ( empty( $modes_str ) ) {
-    return;
-  }
-
-  $modes = explode( ',', $modes_str );
-}
-
-$modes = array_change_key_case( $modes, CASE_UPPER );
-
-foreach ( $modes as $i => $mode ) {
-  if ( in_array( $mode, $incompatible_modes, true ) ) {
-    unset( $modes[ $i ] );
-  }
-}
-
-$modes_str = implode( ',', $modes );
-
-$mysqli->query( "SET SESSION sql_mode='$modes_str'" );
-//////////////////////////
-
-
 // Print the current mySQL connection charset
 
 if (!$error && !TESTMODE && !isset($_REQUEST["fn"]))
