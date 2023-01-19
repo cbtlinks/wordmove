@@ -92,7 +92,9 @@ class MySQLDump
 
 		$tables = array_merge($tables, $views); // views must be last
 
-		$this->connection->query('LOCK TABLES `' . implode('` READ, `', $tables) . '` READ');
+		if ( $tables ) {
+			$this->connection->query('LOCK TABLES `' . implode('` READ, `', $tables) . '` READ');
+		}
 
 		$db = $this->connection->query('SELECT DATABASE()')->fetch_row();
 		fwrite($handle, "-- Created at " . @date('j.n.Y G:i') . " using David Grudl MySQL Dump Utility\n"
