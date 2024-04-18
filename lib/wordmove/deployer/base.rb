@@ -71,6 +71,7 @@ module Wordmove
       end
 
       def pull_wordpress
+        logger.task local_wp_content_dir
         logger.task "Pulling wordpress core"
 
         local_path = local_options[:wordpress_path]

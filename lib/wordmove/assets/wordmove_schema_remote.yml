@@ -9,6 +9,8 @@ mapping:
     required: true
   wordpress_absolute_path:
     type: str
+  sql_backup_dir:
+    type: str
   database:
     type: map
     required: true
