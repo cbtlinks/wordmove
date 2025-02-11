@@ -7,6 +7,50 @@ if ($_GET['shared_key'] != $shared_key) {
 
 error_reporting(E_ALL);
 
+/// WPに互換性のないSQLモードの解除 ///
+function set_sql_mode() {
+  $wp_incompatible_modes = array(
+    'NO_ZERO_DATE',
+    'ONLY_FULL_GROUP_BY',
+    'STRICT_TRANS_TABLES',
+    'STRICT_ALL_TABLES',
+    'TRADITIONAL',
+    'ANSI',
+  );
+
+  $res = $mysqli->query("SELECT @@SESSION.sql_mode");
+
+  if ( empty( $res ) ) {
+    return;
+  }
+
+  $modes_array = mysqli_fetch_array( $res );
+  if ( empty( $modes_array[0] ) ) {
+    return;
+  }
+  $modes_str = $modes_array[0];
+
+  if ( empty( $modes_str ) ) {
+    return;
+  }
+
+  $modes = explode( ',', $modes_str );
+
+  $modes = array_change_key_case( $modes, CASE_UPPER );
+
+  foreach ( $modes as $i => $mode ) {
+    if ( in_array( $mode, $wp_incompatible_modes, true ) ) {
+      unset( $modes[ $i ] );
+    }
+  }
+
+  $modes_str = implode( ',', $modes );
+
+  $mysqli->query( "SET SESSION sql_mode='$modes_str'" );
+}
+add_action('database_connected','set_sql_mode');
+
+
 // BigDump ver. 0.36b from 2015-04-30
 // Staggered import of an large MySQL Dump (like phpMyAdmin 2.x Dump)
 // Even through the webservers with hard runtime limit and those in safe mode
@@ -1175,47 +1219,4 @@ function create_ajax_script()
 <?php
 }
 
-
-/// WPに互換性のないSQLモードの解除 ///
-function set_sql_mode() {
-  $wp_incompatible_modes = array(
-    'NO_ZERO_DATE',
-    'ONLY_FULL_GROUP_BY',
-    'STRICT_TRANS_TABLES',
-    'STRICT_ALL_TABLES',
-    'TRADITIONAL',
-    'ANSI',
-  );
-
-  $res = $mysqli->query("SELECT @@SESSION.sql_mode");
-
-  if ( empty( $res ) ) {
-    return;
-  }
-
-  $modes_array = mysqli_fetch_array( $res );
-  if ( empty( $modes_array[0] ) ) {
-    return;
-  }
-  $modes_str = $modes_array[0];
-
-  if ( empty( $modes_str ) ) {
-    return;
-  }
-
-  $modes = explode( ',', $modes_str );
-
-  $modes = array_change_key_case( $modes, CASE_UPPER );
-
-  foreach ( $modes as $i => $mode ) {
-    if ( in_array( $mode, $wp_incompatible_modes, true ) ) {
-      unset( $modes[ $i ] );
-    }
-  }
-
-  $modes_str = implode( ',', $modes );
-
-  $mysqli->query( "SET SESSION sql_mode='$modes_str'" );
-}
-add_action('database_connected','set_sql_mode');
 ?>
