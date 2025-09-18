@@ -30,6 +30,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_runtime_dependency "activesupport", '~> 6.1'
+  spec.add_runtime_dependency "zeitwerk", '~> 2.6.0'
   spec.add_runtime_dependency "colorize", "~> 0.8.1"
   spec.add_runtime_dependency "dotenv", "~> 2.7.5"
   spec.add_runtime_dependency "kwalify", "~> 0"
